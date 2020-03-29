@@ -5,7 +5,7 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   stage: ${file(config.json):STAGE}
   region: ${file(config.json):REGION}
   iamRoleStatements:
@@ -30,6 +30,17 @@ functions:
       - http:
           path: /
           method: post
+          cors:
+            origins:
+              - https://www.camerative.com
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
           request:
             parameters:
               querystrings:
