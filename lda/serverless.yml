@@ -1,0 +1,47 @@
+service: ${file(config.json):SERVICE_NAME}
+
+plugins:
+  - serverless-plugin-include-dependencies
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${file(config.json):STAGE}
+  region: ${file(config.json):REGION}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "lambda:InvokeFunction"
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - "sqs:SendMessage"
+        - "ses:SendEmail"
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - "ses:*"
+      Resource: ${file(config.json):SENDER_ARN}
+
+functions:
+  receive:
+    handler: src/handler.handle
+    events:
+      - http:
+          path: /
+          method: post
+          cors:
+            origins:
+              - https://www.camerative.com
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+          request:
+            parameters:
+              querystrings:
+                format: true

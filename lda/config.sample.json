@@ -1,0 +1,7 @@
+{
+  "SERVICE_NAME": "formplug",
+  "ENCRYPTION_KEY": "formsaregreat",
+  "REGION": "eu-west-1",
+  "STAGE": "dev",
+  "SENDER_ARN": ""
+}
